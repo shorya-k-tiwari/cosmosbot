@@ -14,7 +14,7 @@ genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
 AI_CHANNEL_NAME = '⋆˚𝜗𝜚˚﹒𓏲✦🤖﹒cosmos-ai'
 
 # Model to use. If this errors after upgrading the package, try 'gemini-1.5-flash-latest'
-GEMINI_MODEL    = 'gemini-1.5-flash'
+GEMINI_MODEL    = 'gemini-1.5-flash-latest'
 
 GREETINGS = [
     'Hey handsome! 😏',
