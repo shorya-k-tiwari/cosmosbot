@@ -181,9 +181,9 @@ class Moderation(commands.Cog):
         if not self.can_act(ctx.author, member):
             return await ctx.send('❌ You cannot timeout someone with an equal or higher role!')
         await member.timeout(discord.utils.utcnow() + delta, reason=reason)
-        await ctx.send(embed=mod_embed('Member Timed Out', ctx.author, member, reason, discord.Color.dark_orange(), duration=duration))
+        await ctx.send(embed=mod_embed('Member Timed Out', ctx.author, member, reason, KICK, duration=duration))
         try:
-            dm = discord.Embed(title='⏰ You were timed out', color=discord.Color.dark_orange())
+            dm = discord.Embed(title='⏰ You were timed out', color=KICK)
             dm.add_field(name='Duration', value=duration)
             dm.add_field(name='Reason', value=reason)
             await member.send(embed=dm)
@@ -201,7 +201,7 @@ class Moderation(commands.Cog):
         if not self.can_act(i.user, member):
             return await i.response.send_message('❌ You cannot timeout someone with an equal or higher role!', ephemeral=True)
         await member.timeout(discord.utils.utcnow() + delta, reason=reason)
-        await i.response.send_message(embed=mod_embed('Member Timed Out', i.user, member, reason, discord.Color.dark_orange(), duration=duration))
+        await i.response.send_message(embed=mod_embed('Member Timed Out', i.user, member, reason, KICK, duration=duration))
 
     # ── UNTIMEOUT ─────────────────────────────────────────────────────────────
     @commands.command(name='untimeout')
