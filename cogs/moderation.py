@@ -5,6 +5,13 @@ from discord import app_commands
 import json, os, re
 from datetime import datetime, timezone, timedelta
 
+# Add below imports:
+WARN    = discord.Color.from_rgb(230, 175, 50)
+KICK    = discord.Color.from_rgb(220, 115, 45)
+BAN     = discord.Color.from_rgb(210, 55, 55)
+SUCCESS = discord.Color.from_rgb(26, 188, 156)
+MUTED   = discord.Color.from_rgb(100, 110, 125)
+
 WARNINGS_FILE = 'data/warnings.json'
 
 # ── Data helpers ──────────────────────────────────────────────────────────────
