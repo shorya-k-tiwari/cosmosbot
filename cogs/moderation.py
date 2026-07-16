@@ -76,13 +76,13 @@ class Moderation(commands.Cog):
             'time': datetime.now(timezone.utc).isoformat()
         })
         save_warnings(data)
-        embed = mod_embed('User Warned', ctx.author, member, reason, discord.Color.yellow())
+        embed = mod_embed('User Warned', ctx.author, member, reason, WARN)
         embed.add_field(name='⚠️ Total Warnings', value=str(len(data[uid])))
         await ctx.send(embed=embed)
         try:
             dm = discord.Embed(title='⚠️ You received a warning',
                                description=f'Server: **{ctx.guild.name}**',
-                               color=discord.Color.yellow())
+                               color=WARN)
             dm.add_field(name='Reason', value=reason)
             dm.add_field(name='Total Warnings', value=str(len(data[uid])))
             await member.send(embed=dm)
@@ -101,7 +101,7 @@ class Moderation(commands.Cog):
             'time': datetime.now(timezone.utc).isoformat()
         })
         save_warnings(data)
-        embed = mod_embed('User Warned', i.user, member, reason, discord.Color.yellow())
+        embed = mod_embed('User Warned', i.user, member, reason, WARN)
         embed.add_field(name='⚠️ Total Warnings', value=str(len(data[uid])))
         await i.response.send_message(embed=embed)
 
@@ -262,7 +262,7 @@ class Moderation(commands.Cog):
         warns = load_warnings().get(str(member.id), [])
         if not warns:
             return await ctx.send(f'✅ {member.mention} has no warnings.')
-        embed = discord.Embed(title=f'⚠️ Warnings — {member.display_name}', color=discord.Color.yellow())
+        embed = discord.Embed(title=f'⚠️ Warnings — {member.display_name}', color=WARN)
         embed.set_thumbnail(url=member.display_avatar.url)
         for idx, w in enumerate(warns, 1):
             embed.add_field(name=f'Warning #{idx}',
@@ -278,7 +278,7 @@ class Moderation(commands.Cog):
         warns = load_warnings().get(str(member.id), [])
         if not warns:
             return await i.response.send_message(f'✅ {member.mention} has no warnings.', ephemeral=True)
-        embed = discord.Embed(title=f'⚠️ Warnings — {member.display_name}', color=discord.Color.yellow())
+        embed = discord.Embed(title=f'⚠️ Warnings — {member.display_name}', color=WARN)
         for idx, w in enumerate(warns, 1):
             embed.add_field(name=f'Warning #{idx}',
                 value=f"**Reason:** {w['reason']}\n**By:** {w['mod']}\n**Date:** {w['time'][:10]}",
