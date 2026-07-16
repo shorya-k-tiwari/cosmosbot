@@ -114,12 +114,12 @@ class Moderation(commands.Cog):
         try:
             dm = discord.Embed(title='👢 You were kicked',
                                description=f'From: **{ctx.guild.name}**',
-                               color=discord.Color.orange())
+                               color=KICK)
             dm.add_field(name='Reason', value=reason)
             await member.send(embed=dm)
         except: pass
         await member.kick(reason=reason)
-        await ctx.send(embed=mod_embed('Member Kicked', ctx.author, member, reason, discord.Color.orange()))
+        await ctx.send(embed=mod_embed('Member Kicked', ctx.author, member, reason, KICK))
 
     @app_commands.command(name='kick', description='Kick a member')
     @app_commands.describe(member='Member to kick', reason='Reason')
@@ -130,12 +130,12 @@ class Moderation(commands.Cog):
         try:
             dm = discord.Embed(title='👢 You were kicked',
                                description=f'From: **{i.guild.name}**',
-                               color=discord.Color.orange())
+                               color=KICK)
             dm.add_field(name='Reason', value=reason)
             await member.send(embed=dm)
         except: pass
         await member.kick(reason=reason)
-        await i.response.send_message(embed=mod_embed('Member Kicked', i.user, member, reason, discord.Color.orange()))
+        await i.response.send_message(embed=mod_embed('Member Kicked', i.user, member, reason, KICK))
 
     # ── BAN ───────────────────────────────────────────────────────────────────
     @commands.command(name='ban')
