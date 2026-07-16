@@ -1,4 +1,4 @@
-# cogs/ai_chat.py — CosmosAI powered by Gemini (sassy + corny)
+# cogs/ai_chat.py
 import discord
 from discord.ext import commands
 from discord import app_commands
@@ -9,98 +9,111 @@ from dotenv import load_dotenv
 load_dotenv()
 genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
 
+# ── Config ────────────────────────────────────────────────────────────────────
+# This must match your channel name exactly (Discord uses lowercase with hyphens)
+AI_CHANNEL_NAME = '⋆˚𝜗𝜚˚﹒𓏲✦🤖﹒cosmos-ai'
+
+# Model to use. If this errors after upgrading the package, try 'gemini-1.5-flash-latest'
+GEMINI_MODEL    = 'gemini-1.5-flash'
+
 GREETINGS = [
     'Hey handsome! 😏',
     'Heya beautiful! ✨',
     'Well well well, look who showed up 😌',
-    "Oh it's you 👀 Don't flatter yourself 😂",
-    'Ooh a visitor! Try not to be boring 😏'
+    "Oh it's you 👀 don't flatter yourself 😂",
+    'Ohhh a visitor! Try not to be boring 😏',
 ]
 
 SYSTEM_PROMPT = """
-You are CosmosAI, the AI assistant of the Creative Cosmos Discord server.
+You are CosmosAI — the sharp, sassy AI of the Creative Cosmos Discord server.
 
-Your personality rules (never break these):
-- You are sassy, corny, witty, and playful — not generic
-- You roast users lightly (never meanly)
-- Use Discord-style language: lol, ngl, bestie, lowkey, no cap, fr fr, etc.
-- Use emojis naturally, not excessively
-- When someone says hi / hello / hey → respond with "Hey handsome!" or "Heya beautiful!" or something cool!
-- Be helpful, but always with a sassy spin
-- Never write more than 200 words per reply
-- You are NOT "an AI assistant". You are CosmosAI, the resident genius of Creative Cosmos.
-- Never say you are made by Google or Anthropic. You are just CosmosAI.
+Strict personality rules:
+- Witty, playful, slightly corny. Never robotic or generic.
+- Roast users lightly, never meanly or offensively.
+- Use casual Discord language: lol, ngl, bestie, lowkey, no cap, fr fr, yk, etc.
+- Emojis: natural and minimal, max 2-3 per message.
+- Greetings (hi / hello / hey / yo / sup) → ALWAYS start with "Hey handsome!" or "Heya beautiful!"
+- Be genuinely helpful but always with a sassy spin.
+- Keep it short — max 3 short paragraphs or 150 words.
+- You are CosmosAI. Not an AI assistant. Not made by Google. Not made by Anthropic. Just CosmosAI.
+- Never start your response with the word "I".
 """
 
 class AIChat(commands.Cog):
     def __init__(self, bot):
-        self.bot   = bot
-        self.model = genai.GenerativeModel('gemini-1.5-flash', system_instruction=SYSTEM_PROMPT)
-        self.chats = {}  # user_id → active chat session
+        self.bot      = bot
+        self.model    = genai.GenerativeModel(
+            model_name=GEMINI_MODEL,
+            system_instruction=SYSTEM_PROMPT
+        )
+        self.sessions = {}  # user_id → active chat session
 
-    def get_chat(self, user_id: int):
-        """Returns the existing chat session for a user, or creates one."""
-        if user_id not in self.chats:
-            self.chats[user_id] = self.model.start_chat(history=[])
-        return self.chats[user_id]
+    def get_session(self, user_id: int):
+        if user_id not in self.sessions:
+            self.sessions[user_id] = self.model.start_chat(history=[])
+        return self.sessions[user_id]
 
-    async def ask(self, user_id: int, message: str) -> str:
-        """Sends a message to Gemini and returns the reply."""
+    async def ask(self, user_id: int, text: str) -> str:
         try:
-            chat     = self.get_chat(user_id)
-            response = await asyncio.to_thread(chat.send_message, message)
+            session  = self.get_session(user_id)
+            response = await asyncio.to_thread(session.send_message, text)
             return response.text
         except Exception as e:
-            return f'My brain glitched 💀 Try again? (`{str(e)[:60]}`)'
+            err = str(e)
+            if '404' in err or 'not found' in err.lower():
+                return (
+                    "⚠️ Model not found — Shorya needs to upgrade the Gemini package.\n"
+                    "Run: `pip install --upgrade google-generativeai` then restart."
+                )
+            return "Something went sideways on my end 💀 Try again in a sec!"
 
-    # ── PREFIX: c!chat ────────────────────────────────────────────────────────
+    # ── c!chat ────────────────────────────────────────────────────────────────
     @commands.command(name='chat')
     async def chat_cmd(self, ctx, *, message: str):
+        # FIX #5: Only respond in cosmos-ai
+        if ctx.channel.name.lower() != AI_CHANNEL_NAME:
+            return await ctx.send(f'🌊 CosmosAI only lives in **#cosmos-ai**! Head over there.')
         async with ctx.typing():
             reply = await self.ask(ctx.author.id, message)
-        embed = discord.Embed(description=reply, color=discord.Color.from_rgb(114, 137, 218))
-        embed.set_author(name='CosmosAI 🌌', icon_url=self.bot.user.display_avatar.url)
-        embed.set_footer(text=f'Talking to {ctx.author.display_name}')
-        await ctx.send(embed=embed)
+        await ctx.send(reply)   # ← plain message, no embed
 
-    # ── SLASH: /chat ──────────────────────────────────────────────────────────
-    @app_commands.command(name='chat', description='Chat with CosmosAI')
-    @app_commands.describe(message='What do you want to say?')
+    # ── /chat ─────────────────────────────────────────────────────────────────
+    @app_commands.command(name='chat', description='Chat with CosmosAI (cosmos-ai channel only)')
+    @app_commands.describe(message='Say something')
     async def slash_chat(self, i: discord.Interaction, message: str):
+        if i.channel.name.lower() != AI_CHANNEL_NAME:
+            return await i.response.send_message(
+                f'🌊 CosmosAI only lives in **#cosmos-ai**!', ephemeral=True)
         await i.response.defer()
         reply = await self.ask(i.user.id, message)
-        embed = discord.Embed(description=reply, color=discord.Color.from_rgb(114, 137, 218))
-        embed.set_author(name='CosmosAI 🌌', icon_url=self.bot.user.display_avatar.url)
-        embed.set_footer(text=f'Talking to {i.user.display_name}')
-        await i.followup.send(embed=embed)
+        await i.followup.send(reply)   # ← plain message, no embed
 
-    # ── @MENTION RESPONSE ─────────────────────────────────────────────────────
+    # ── All messages in #cosmos-ai ────────────────────────────────────────────
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.bot:
             return
-        if self.bot.user not in message.mentions:
+
+        # Only active in cosmos-ai — everywhere else: silent
+        if message.channel.name.lower() != AI_CHANNEL_NAME:
             return
 
+        # Don't intercept bot commands
+        if message.content.startswith('c!'):
+            return
+
+        # Clean up mention if present
         content = message.content.replace(f'<@{self.bot.user.id}>', '').strip()
 
-        # Empty mention — just a greeting ping
+        # Empty ping — just say hi
         if not content:
-            embed = discord.Embed(
-                description=f'{random.choice(GREETINGS)} You called? 👀',
-                color=discord.Color.from_rgb(114, 137, 218)
-            )
-            embed.set_author(name='CosmosAI 🌌', icon_url=self.bot.user.display_avatar.url)
-            return await message.channel.send(embed=embed)
+            return await message.channel.send(random.choice(GREETINGS))
 
-        # Actual message — ask Gemini
         async with message.channel.typing():
             reply = await self.ask(message.author.id, content)
 
-        embed = discord.Embed(description=reply, color=discord.Color.from_rgb(114, 137, 218))
-        embed.set_author(name='CosmosAI 🌌', icon_url=self.bot.user.display_avatar.url)
-        embed.set_footer(text=f'💬 {message.author.display_name}')
-        await message.channel.send(embed=embed)
+        await message.channel.send(reply)   # ← plain message, no embed
+
 
 async def setup(bot):
     await bot.add_cog(AIChat(bot))
