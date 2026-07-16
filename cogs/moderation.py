@@ -146,12 +146,12 @@ class Moderation(commands.Cog):
         try:
             dm = discord.Embed(title='🔨 You were banned',
                                description=f'From: **{ctx.guild.name}**',
-                               color=discord.Color.red())
+                               color=BAN)
             dm.add_field(name='Reason', value=reason)
             await member.send(embed=dm)
         except: pass
         await member.ban(reason=reason)
-        await ctx.send(embed=mod_embed('Member Banned', ctx.author, member, reason, discord.Color.red()))
+        await ctx.send(embed=mod_embed('Member Banned', ctx.author, member, reason, BAN))
 
     @app_commands.command(name='ban', description='Ban a member')
     @app_commands.describe(member='Member to ban', reason='Reason')
@@ -162,12 +162,12 @@ class Moderation(commands.Cog):
         try:
             dm = discord.Embed(title='🔨 You were banned',
                                description=f'From: **{i.guild.name}**',
-                               color=discord.Color.red())
+                               color=BAN)
             dm.add_field(name='Reason', value=reason)
             await member.send(embed=dm)
         except: pass
         await member.ban(reason=reason)
-        await i.response.send_message(embed=mod_embed('Member Banned', i.user, member, reason, discord.Color.red()))
+        await i.response.send_message(embed=mod_embed('Member Banned', i.user, member, reason, BAN))
 
     # ── TIMEOUT ───────────────────────────────────────────────────────────────
     @commands.command(name='timeout')
@@ -341,7 +341,7 @@ class Moderation(commands.Cog):
         await ctx.send(embed=discord.Embed(
             title='🔒 Channel Locked',
             description=f'{ctx.channel.mention} has been locked.',
-            color=discord.Color.red()
+            color=BAN
         ))
 
     @app_commands.command(name='lock', description='Lock the current channel')
@@ -353,7 +353,7 @@ class Moderation(commands.Cog):
         await i.response.send_message(embed=discord.Embed(
             title='🔒 Channel Locked',
             description=f'{i.channel.mention} has been locked.',
-            color=discord.Color.red()
+            color=BAN
         ))
 
     # ── UNLOCK ────────────────────────────────────────────────────────────────
