@@ -211,7 +211,7 @@ class Moderation(commands.Cog):
         await ctx.send(embed=discord.Embed(
             title='✅ Timeout Removed',
             description=f"{member.mention}'s timeout has been removed.",
-            color=discord.Color.green()
+            color=SUCCESS
         ))
 
     @app_commands.command(name='untimeout', description='Remove a timeout from a member')
@@ -222,7 +222,7 @@ class Moderation(commands.Cog):
         await i.response.send_message(embed=discord.Embed(
             title='✅ Timeout Removed',
             description=f"{member.mention}'s timeout has been removed.",
-            color=discord.Color.green()
+            color=SUCCESS
         ))
 
     # ── UNBAN ─────────────────────────────────────────────────────────────────
@@ -235,7 +235,7 @@ class Moderation(commands.Cog):
             await ctx.send(embed=discord.Embed(
                 title='✅ User Unbanned',
                 description=f'**{user}** has been unbanned.',
-                color=discord.Color.green()
+                color=SUCCESS
             ))
         except discord.NotFound:
             await ctx.send('❌ User not found or is not banned!')
@@ -250,7 +250,7 @@ class Moderation(commands.Cog):
             await i.response.send_message(embed=discord.Embed(
                 title='✅ User Unbanned',
                 description=f'**{user}** has been unbanned.',
-                color=discord.Color.green()
+                color=SUCCESS
             ))
         except:
             await i.response.send_message('❌ User not found or not banned!', ephemeral=True)
@@ -296,7 +296,7 @@ class Moderation(commands.Cog):
         await ctx.send(embed=discord.Embed(
             title='✅ Warnings Cleared',
             description=f'All warnings for {member.mention} have been cleared.',
-            color=discord.Color.green()
+            color=SUCCESS
         ))
 
     @app_commands.command(name='clearwarnings', description='Clear all warnings for a member')
@@ -309,7 +309,7 @@ class Moderation(commands.Cog):
         await i.response.send_message(embed=discord.Embed(
             title='✅ Warnings Cleared',
             description=f'All warnings for {member.mention} have been cleared.',
-            color=discord.Color.green()
+            color=SUCCESS
         ))
 
     # ── PURGE ─────────────────────────────────────────────────────────────────
@@ -366,7 +366,7 @@ class Moderation(commands.Cog):
         await ctx.send(embed=discord.Embed(
             title='🔓 Channel Unlocked',
             description=f'{ctx.channel.mention} has been unlocked.',
-            color=discord.Color.green()
+            color=SUCCESS
         ))
 
     @app_commands.command(name='unlock', description='Unlock the current channel')
@@ -378,7 +378,7 @@ class Moderation(commands.Cog):
         await i.response.send_message(embed=discord.Embed(
             title='🔓 Channel Unlocked',
             description=f'{i.channel.mention} has been unlocked.',
-            color=discord.Color.green()
+            color=SUCCESS
         ))
 
 async def setup(bot):
