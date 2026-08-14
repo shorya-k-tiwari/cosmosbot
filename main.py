@@ -12,7 +12,7 @@ GUILD_ID = int(os.getenv('GUILD_ID', 0))
 intents = discord.Intents.default()
 intents.message_content = True
 intents.members        = True
-intents.presences      = True   # ← FIX #2: this is what makes status work
+intents.presences      = True
 
 COGS = [
     'cogs.moderation',
@@ -20,7 +20,7 @@ COGS = [
     'cogs.fun',
     'cogs.welcome',
     'cogs.ai_chat',
-    'cogs.events',   # ← NEW
+    'cogs.events',
 ]
 
 OCEAN = discord.Color.from_rgb(0, 180, 216)
