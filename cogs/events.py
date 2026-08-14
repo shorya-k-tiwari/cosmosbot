@@ -3,16 +3,16 @@ import discord
 from discord.ext import commands
 
 # ╔═══════════════════════════════════════════════════════════════════╗
-# ║  FILL THIS IN before running                                     ║
-# ║                                                                  ║
-# ║  How to get a User ID:                                          ║
-# ║    Discord Settings → Advanced → Developer Mode ON              ║
-# ║    Right-click a user → Copy User ID                           ║
-# ║                                                                  ║
-# ║  How to get an emoji name:                                      ║
-# ║    In Discord, type  \:your_emoji:  and send it               ║
-# ║    It shows something like  <:wavey:123456789>                 ║
-# ║    The name is the part between colons → wavey                 ║
+# ║  FILL THIS IN before running                                      ║
+# ║                                                                   ║
+# ║  How to get a User ID:                                            ║
+# ║    Discord Settings → Advanced → Developer Mode ON                ║
+# ║    Right-click a user → Copy User ID                              ║
+# ║                                                                   ║
+# ║  How to get an emoji name:                                        ║
+# ║    In Discord, type  \:your_emoji:  and send it                   ║
+# ║    It shows something like  <:wavey:123456789>                    ║
+# ║    The name is the part between colons → wavey                    ║
 # ╚═══════════════════════════════════════════════════════════════════╝
 
 OWNER_REACTIONS = {
