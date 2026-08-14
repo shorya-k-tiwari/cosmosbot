@@ -1,4 +1,5 @@
 # main.py
+from keep_alive import keep_alive
 import discord
 from discord.ext import commands
 import os
@@ -117,4 +118,5 @@ async def on_command_error(ctx, error):
     else:
         print(f'Unhandled error: {error}')
 
+keep_alive()
 bot.run(os.getenv('DISCORD_TOKEN'))
